@@ -13,7 +13,7 @@ app.get("/hello", (_req, res) => {
 app.get("/map", (_req, res) => {
   const mapPath = path.resolve(
     process.cwd(),
-    "../frontend/public/Screenshot 2025-09-17 154200.png"
+    "../frontend/public/Screenshot 2025-09-17 160452.png"
   );
 
   res.sendFile(mapPath, (err) => {
