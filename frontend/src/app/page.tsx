@@ -27,8 +27,7 @@ export default function Home() {
 
   return (
     <main>
-      <h1>Welcome to the POC</h1>
-      <p>This is a super-simple unstyled landing page served by Next.js.</p>
+      <h1>Welcome to your IDEX Dashboard</h1>
       <div style={{ position: 'relative', display: 'inline-block' }}>
         <img
           src="/Screenshot 2025-09-17 154200.png"
