@@ -4,6 +4,7 @@ import React, { useState } from "react";
 // Import the LinearIssue type so we can annotate props
 import type { LinearIssue } from "../lib/linear/team";
 import Modal from "./Modal";
+import styles from "./IssueTable.module.css";
 
 interface IssueTableProps {
   issuesByState: Record<string, LinearIssue[]>;
@@ -34,33 +35,33 @@ export default function IssueTable({ issuesByState }: IssueTableProps) {
     return va - vb;
   });
 
+  const badgeClass = (name: string) => {
+    const n = normalize(name);
+    if (n.includes("done")) return styles.badgeDone;
+    if (n.includes("progress")) return styles.badgeInprogress;
+    return styles.badgeTodo;
+  };
+
   return (
     <>
       {stateEntries.map(([stateName, stateIssues], idx) => (
-        <section key={stateName} style={{ marginTop: idx === 0 ? 20 : 40 }}>
-          <h2 style={{ margin: "0 0 8px" }}>{stateName}</h2>
+        <section key={stateName} className={styles.section}>
+          <h2 className={styles.stateHeading}>{stateName}</h2>
 
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              fontFamily: "sans-serif",
-              tableLayout: "fixed",
-            }}
-          >
+          <table className={styles.table}>
             <colgroup>
               <col style={{ width: "55%" }} />
               <col style={{ width: "25%" }} />
               <col style={{ width: "20%" }} />
             </colgroup>
-            <thead>
+            <thead className={styles.thead}>
               <tr>
-                <th style={{ textAlign: "left", padding: "4px 8px" }}>Title</th>
-                <th style={{ textAlign: "left", padding: "4px 8px" }}>Assignee</th>
-                <th style={{ textAlign: "left", padding: "4px 8px" }}>Created At</th>
+                <th className={styles.th}>Title</th>
+                <th className={styles.th}>Assignee</th>
+                <th className={styles.th}>Created At</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className={styles.tbody}>
               {stateIssues
                 .slice()
                 .sort(
@@ -69,19 +70,40 @@ export default function IssueTable({ issuesByState }: IssueTableProps) {
                 .map((issue) => (
                   <tr
                     key={issue.id}
-                    style={{ cursor: "pointer", borderTop: "1px solid #eee" }}
-                    onClick={() => setSelectedIssue(issue)}
+                    className={styles.row}
+                    onClick={(e) => {
+                      const tr = e.currentTarget as HTMLTableRowElement;
+                      tr.classList.add(styles.flash);
+                      setTimeout(() => tr.classList.remove(styles.flash), 400);
+                      setSelectedIssue(issue);
+                    }}
                   >
-                    <td style={{ padding: "4px 8px" }}>{issue.title}</td>
-                    <td style={{ padding: "4px 8px" }}>{issue.assignee?.name ?? "—"}</td>
-                    <td style={{ padding: "4px 8px" }}>
-                      {new Date(issue.createdAt).toLocaleString()}
+                    <td className={styles.td}>
+                      <span
+                        className={`${styles.badge} ${badgeClass(stateName)}`}
+                        data-label={stateName}
+                      ></span>
+                      {issue.title}
+                    </td>
+                    <td className={styles.td} data-label="Assignee">
+                      {issue.assignee?.name ?? "—"}
+                    </td>
+                    <td className={styles.td} data-label="Created">
+                      {new Date(issue.createdAt).toLocaleString("en-US", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "numeric",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        hour12: true,
+                      })}
                     </td>
                   </tr>
                 ))}
             </tbody>
           </table>
-          {idx < stateEntries.length - 1 && <hr style={{ margin: "24px 0" }} />}
+          {idx < stateEntries.length - 1 && <hr className={styles.divider} />}
         </section>
       ))}
 

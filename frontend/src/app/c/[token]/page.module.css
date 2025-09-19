@@ -1,0 +1,37 @@
+/* Base styles for client page */
+
+.container {
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.summary {
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 0 10px rgba(0, 255, 215, 0.25);
+}
+
+.summary h1 {
+  margin-top: 0;
+  color: var(--accent);
+}
+
+.tableWrapper {
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+}

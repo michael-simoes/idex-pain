@@ -4,6 +4,7 @@ import path from "path";
 import { notFound } from "next/navigation";
 import { fetchTeamId, fetchTeamDetails, LinearTeamDetails } from "../../../lib/linear";
 import IssueTable from "../../../components/IssueTable";
+import styles from "./page.module.css";
 
 // Helper that chains the two existing calls
 async function loadTeamDetails(teamName: string): Promise<LinearTeamDetails> {
@@ -49,15 +50,19 @@ export default async function ClientPage({ params }: any) {
   }
 
   return (
-    <main style={{ padding: "2rem" }}>
-      <h1>{client?.name ?? "Client"}</h1>
-      <p>Welcome to Lindie 2.0. Simplicity is beautiful.</p>
-      {/* Display error if fetching failed */}
-      {teamDetails && "error" in (teamDetails as any) && (
-        <p style={{ color: "red", marginTop: 20 }}>{(teamDetails as any).error}</p>
-      )}
+    <main className={styles.container}>
+      <section className={styles.summary}>
+        <h1>{client?.name ?? "Client"}</h1>
+        <p>Welcome to Lindie 2.0. Simplicity is beautiful.</p>
+        {/* Display error if fetching failed */}
+        {teamDetails && "error" in (teamDetails as any) && (
+          <p style={{ color: "red", marginTop: 20 }}>{(teamDetails as any).error}</p>
+        )}
+      </section>
 
-      {issuesByState && <IssueTable issuesByState={issuesByState} />}
+      <section className={styles.tableWrapper}>
+        {issuesByState && <IssueTable issuesByState={issuesByState} />}
+      </section>
     </main>
   );
 }
