@@ -51,7 +51,7 @@ export default async function ClientPage({ params }: any) {
   return (
     <main style={{ padding: "2rem" }}>
       <h1>{client?.name ?? "Client"}</h1>
-      <p>Welcome to your custom page.</p>
+      <p>Welcome to Lindie 2.0. Simplicity is beautiful.</p>
       {/* Display error if fetching failed */}
       {teamDetails && "error" in (teamDetails as any) && (
         <p style={{ color: "red", marginTop: 20 }}>{(teamDetails as any).error}</p>
