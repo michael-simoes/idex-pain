@@ -115,3 +115,9 @@
 - SpecSwap: /c/cc51626f34fb6325b9d66b1de4d57a2e
 - Valara: /c/4b4be1fca9181955b2e87e20dbbf8572
 - AMA Hackathon: /c/328c3114fe96802d445a87f294fe50d7
+- Acme Corp: /c/a2109d394a5fac60d095773b4fd69ef8
+- Globex Inc: /c/eab76c964203cf704063fe29d2f842c5
+- IDEX: /c/0f6d06551537e7743f18662de3f98b18
+- SpecSwap: /c/833730b4e24045b1f6be0b84cffbb97e
+- Valara: /c/70c434ad515067a254c96459fcaa3f96
+- AMA Hackathon: /c/65023385d5d68cb9218307aa2fea3a5d
