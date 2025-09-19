@@ -37,6 +37,13 @@ const TEAM_DETAILS_QUERY = `
           }
           createdAt
           archivedAt
+          labels {
+            nodes {
+              id
+              name
+              color
+            }
+          }
         }
       }
     }
@@ -58,6 +65,13 @@ export interface LinearIssue {
   archivedAt?: string | null;
   state: {
     name: string;
+  };
+  labels?: {
+    nodes: {
+      id: string;
+      name: string;
+      color: string;
+    }[];
   };
 }
 

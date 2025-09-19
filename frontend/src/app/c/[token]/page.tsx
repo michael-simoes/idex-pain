@@ -40,7 +40,14 @@ export default async function ClientPage({ params }: any) {
   // Prepare grouped issues if we have valid details
   let issuesByState: Record<string, any[]> | null = null;
   if (teamDetails && !("error" in (teamDetails as any))) {
-    const issues: any[] = (teamDetails as any).issues.nodes;
+    const issues: any[] = (teamDetails as any).issues.nodes.filter((issue: any) => {
+      const labelNames = issue.labels?.nodes?.map((l: any) => l.name) || [];
+      return (
+        labelNames.length === 0 ||
+        labelNames.includes("Story") ||
+        labelNames.includes("AMA")
+      );
+    });
     issuesByState = issues.reduce((acc: Record<string, any[]>, issue: any) => {
       const stateName = issue.state?.name ?? "Unknown";
       if (!acc[stateName]) acc[stateName] = [];

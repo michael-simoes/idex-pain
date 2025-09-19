@@ -48,61 +48,68 @@ export default function IssueTable({ issuesByState }: IssueTableProps) {
         <section key={stateName} className={styles.section}>
           <h2 className={styles.stateHeading}>{stateName}</h2>
 
-          <table className={styles.table}>
-            <colgroup>
-              <col style={{ width: "55%" }} />
-              <col style={{ width: "25%" }} />
-              <col style={{ width: "20%" }} />
-            </colgroup>
-            <thead className={styles.thead}>
-              <tr>
-                <th className={styles.th}>Title</th>
-                <th className={styles.th}>Assignee</th>
-                <th className={styles.th}>Created At</th>
-              </tr>
-            </thead>
-            <tbody className={styles.tbody}>
-              {stateIssues
-                .slice()
-                .sort(
-                  (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-                )
-                .map((issue) => (
-                  <tr
-                    key={issue.id}
-                    className={styles.row}
-                    onClick={(e) => {
-                      const tr = e.currentTarget as HTMLTableRowElement;
-                      tr.classList.add(styles.flash);
-                      setTimeout(() => tr.classList.remove(styles.flash), 400);
-                      setSelectedIssue(issue);
-                    }}
-                  >
-                    <td className={styles.td}>
-                      <span
-                        className={`${styles.badge} ${badgeClass(stateName)}`}
-                        data-label={stateName}
-                      ></span>
-                      {issue.title}
-                    </td>
-                    <td className={styles.td} data-label="Assignee">
-                      {issue.assignee?.name ?? "—"}
-                    </td>
-                    <td className={styles.td} data-label="Created">
-                      {new Date(issue.createdAt).toLocaleString("en-US", {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                        hour: "numeric",
-                        minute: "2-digit",
-                        second: "2-digit",
-                        hour12: true,
-                      })}
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+          <div className={styles.scrollWrap}>
+            <table className={styles.table}>
+              <colgroup>
+                <col style={{ width: "70%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "10%" }} />
+              </colgroup>
+              <thead className={styles.thead}>
+                <tr>
+                  <th className={styles.th}>Title</th>
+                  <th className={styles.th}>Assignee</th>
+                  <th className={styles.th}>Created At</th>
+                  <th className={styles.th}>Labels</th>
+                </tr>
+              </thead>
+              <tbody className={styles.tbody}>
+                {stateIssues
+                  .slice()
+                  .sort(
+                    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                  )
+                  .map((issue) => (
+                    <tr
+                      key={issue.id}
+                      className={styles.row}
+                      onClick={(e) => {
+                        const tr = e.currentTarget as HTMLTableRowElement;
+                        tr.classList.add(styles.flash);
+                        setTimeout(() => tr.classList.remove(styles.flash), 400);
+                        setSelectedIssue(issue);
+                      }}
+                    >
+                      <td className={`${styles.td} ${styles.tdTitle}`}>
+                        <span
+                          className={`${styles.badge} ${badgeClass(stateName)}`}
+                          data-label={stateName}
+                        ></span>
+                        {issue.title}
+                      </td>
+                      <td className={styles.td}>
+                        {issue.assignee?.name ?? "—"}
+                      </td>
+                      <td className={styles.td}>
+                        {new Date(issue.createdAt).toLocaleString("en-US", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                          hour: "numeric",
+                          minute: "2-digit",
+                          second: "2-digit",
+                          hour12: true,
+                        })}
+                      </td>
+                      <td className={styles.td} data-label="Labels">
+                        {issue.labels?.nodes?.map((l) => l.name).join(", ") || "—"}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
           {idx < stateEntries.length - 1 && <hr className={styles.divider} />}
         </section>
       ))}
