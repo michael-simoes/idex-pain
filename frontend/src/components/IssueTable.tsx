@@ -14,8 +14,11 @@ export default function IssueTable({ issuesByState }: IssueTableProps) {
 
   // Priority order to control section sorting
   const PRIORITY_ORDER = [
-    "readyforcodereview", // Ready for Code Review
+    "readyfordeployment", // Ready for Deployment
+    "readyforproduction", // Ready for Production (alias)
+    "qainprogress", // QA In Progress
     "readyforqa", // Ready for QA
+    "readyforcodereview", // Ready for Code Review
     "inprogress", // In Progress / In progress
     "todo", // Todo / To-do / To do
     "backlog",
