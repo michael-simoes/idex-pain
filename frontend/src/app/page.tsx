@@ -1,61 +1,53 @@
-type OverlayNode = {
-  id: string;
-  x: number;
-  y: number;
-};
+"use client";
 
-type OverlayEdge = {
-  from: string;
-  to: string;
-};
+import { useState } from "react";
+import { fetchTeamId, fetchTeamDetails, LinearTeamDetails } from "../lib/linear";
 
-const nodes: OverlayNode[] = [
-  { id: 'A', x: 250, y: 220 },
-  { id: 'B', x: 420, y: 250 },
-  { id: 'C', x: 540, y: 310 },
-  { id: 'D', x: 360, y: 400 },
-];
-
-const edges: OverlayEdge[] = [
-  { from: 'A', to: 'B' },
-  { from: 'B', to: 'C' },
-  { from: 'B', to: 'D' },
-];
+// Helper that chains the two existing calls
+async function loadTeamDetails(teamName: string): Promise<LinearTeamDetails> {
+  const id = await fetchTeamId(teamName);
+  return fetchTeamDetails(id);
+}
 
 export default function Home() {
-  const getNode = (id: string) => nodes.find((n) => n.id === id);
+  const [teamName, setTeamName] = useState("AMA Hackathon");
+  const [teamDetails, setTeamDetails] = useState<LinearTeamDetails | { error: string } | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleLoadTeamDetails = async () => {
+    setLoading(true);
+    try {
+      const details = await loadTeamDetails(teamName);
+      setTeamDetails(details);
+    } catch (err) {
+      console.error(err);
+      setTeamDetails({ error: (err as Error).message });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <main>
-      <h1>Welcome to your IDEX Dashboard</h1>
-      <div style={{ position: 'relative', display: 'inline-block' }}>
-        <img
-          src="/Screenshot 2025-09-17 154200.png"
-          alt="Base map"
-          style={{ display: 'block', width: '100%', height: 'auto', maxWidth: 800 }}
+    <main style={{ padding: 20, fontFamily: "sans-serif" }}>
+      <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 20 }}>
+        <input
+          type="text"
+          value={teamName}
+          onChange={(e) => setTeamName(e.target.value)}
+          placeholder="Enter team name"
+          style={{ padding: "8px 12px", borderRadius: 4, border: "1px solid #ccc", minWidth: 200 }}
         />
-        {/* SVG overlay with simple nodes and edges */}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
-          viewBox="0 0 821 611"
-          preserveAspectRatio="xMidYMid meet"
+        <button 
+          onClick={handleLoadTeamDetails} 
+          disabled={loading || !teamName.trim()} 
+          style={{ padding: "8px 16px", borderRadius: 4 }}
         >
-          <g stroke="#ff3b3b" strokeWidth={3} fill="none">
-            {edges.map((e, idx) => {
-              const a = getNode(e.from);
-              const b = getNode(e.to);
-              if (!a || !b) return null;
-              return <line key={`edge-${idx}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} />;
-            })}
-          </g>
-          <g>
-            {nodes.map((n) => (
-              <circle key={n.id} cx={n.x} cy={n.y} r={6} fill="#1877f2" stroke="#ffffff" strokeWidth={2} />
-            ))}
-          </g>
-        </svg>
+          {loading ? "Loading…" : "Fetch Team Details"}
+        </button>
       </div>
+      {teamDetails && (
+        <pre style={{ marginTop: 20, whiteSpace: "pre-wrap" }}>{JSON.stringify(teamDetails, null, 2)}</pre>
+      )}
     </main>
   );
 }
